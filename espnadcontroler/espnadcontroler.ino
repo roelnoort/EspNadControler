@@ -2,13 +2,17 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
+#include <WifiUdp.h>
 
 const char* ssid = "burton2G";
 const char* password = "customflyingv";
 
 ESP8266WebServer server(80);
+WiFiUDP udp;
 
 const int led = 13;
+const int udpPort = 2705;
+char discoveryMessage[] = "NadControler Discovery";
 
 void handleRoot() {
   digitalWrite(led, 1);
@@ -122,8 +126,21 @@ void setup(void){
 
   server.begin();
   Serial.println("HTTP server started");
+
+  udp.begin(udpPort);
+  Serial.println("UDP server started");
 }
 
 void loop(void){
+  // handle http messages
   server.handleClient();
+
+  // handle udp messages
+  int udppacketsize = udp.parsePacket();
+  if (udppacketsize) {
+    udp.beginPacket(udp.remoteIP(), udp.remotePort());
+    udp.write(discoveryMessage);
+    udp.endPacket();
+  } // if
+  
 }
