@@ -35,6 +35,36 @@ String htmlStyleTag = "<style>\
 </style>";
 
 
+bool NadSend(String command) {
+  bool success = false;
+  
+  Serial.print("\r");
+  Serial.print(command);
+  Serial.print("\r");  
+
+  // all commands should get a reply.
+  // wait max 5 seconds for this
+  int i = 0;
+  while ((Serial.available() == 0) && (i < 50)) {
+    delay(100); // wait for 100 ms
+    i++;
+  }
+
+  Serial.print("value of i = ");
+  Serial.println(i);
+  
+  // And read all data that the receiver sends back to us.
+  String s;
+  while (Serial.available() > 0) {
+    s = Serial.readString();
+    Serial.println("I READ=" + s);
+    success = true;
+  }
+
+  return success;
+}
+
+
 void handleRoot() {
   digitalWrite(led, 1);
 
@@ -73,8 +103,21 @@ void handleSwitchInput() {
     message += "<p>Trying to switch input to "+ String(input) + "</p>";
     message += "</body></html>\n";
   }
+
+  if (NadSend("Main.Power=on")) {
+    if (NadSend("Main.Source=" + String(input))) {
+      server.send(200, "text/html", message);
+    }
+    else {
+      // send server error 500 - internal server error
+      server.send(500, "text/html", message);
+    }
+  } 
+  else {
+    // send server error 500 - internal server error
+    server.send(500, "text/html", message);
+  }
   
-  server.send(200, "text/html", message);
   digitalWrite(led, 0);
 }
 
@@ -90,8 +133,15 @@ void handlePowerOff() {
     message += "<p>Trying to power off the amplifier</p>";
     message += "</body></html>\n";
   }
+
+  if (NadSend("Main.Power=off")) {
+    server.send(200, "text/html", message);
+  }
+  else {
+    // send server error 500 - internal server error
+    server.send(500, "text/html", message);
+  }
   
-  server.send(200, "text/html", message);
   digitalWrite(led, 0);
 }
 
