@@ -147,18 +147,12 @@ bool loadSettings() {
   password = new char[strlen(mypwd)+1];
   strcpy(ssid, myssid);
   strcpy(password, mypwd);
-  //String s(myssid);
-  //ssid = json["ssid"];
-  //password = json["pwd"];
-  
-  // Real world application would store these values in some variables for
-  // later use.
 
   Serial.print("Loaded ssid: ");
   Serial.println(ssid);
   Serial.print("Loaded pwd: ");
   Serial.println(password);
-  return true;
+  return (strlen(ssid) > 0);
 }
 
 bool storeSettings() {
@@ -240,6 +234,8 @@ void loop(void){
   // handle udp messages
   int udppacketsize = udp.parsePacket();
   if (udppacketsize) {
+    Serial.print("Recevied UDP packet of size ");
+    Serial.println(udppacketsize);
     udp.beginPacket(udp.remoteIP(), udp.remotePort());
     udp.write(discoveryMessage);
     udp.endPacket();
