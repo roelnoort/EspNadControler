@@ -3,6 +3,7 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>   // http server
 #include "nad.h"
+#include "debug.h"
 
 ESP8266WebServer server(80);
 
@@ -140,7 +141,7 @@ void WebControlerSetup() {
   server.onNotFound(handleNotFound);
 
   server.begin();
-  Serial.println("HTTP server started");
+  DEBUGLOG("HTTP server started");
 }
 
 void WebControlerLoop() {

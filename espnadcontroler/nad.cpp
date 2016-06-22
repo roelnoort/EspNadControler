@@ -1,4 +1,5 @@
 #include "nad.h"
+#include "debug.h"
 
 bool NadSend(String command) {
   bool success = false;
@@ -14,15 +15,12 @@ bool NadSend(String command) {
     delay(100); // wait for 100 ms
     i++;
   }
-
-  Serial.print("value of i = ");
-  Serial.println(i);
   
   // And read all data that the receiver sends back to us.
   String s;
   while (Serial.available() > 0) {
     s = Serial.readString();
-    Serial.println("I READ=" + s);
+    DEBUGLOG("I READ=" + s);
     success = true;
   }
 

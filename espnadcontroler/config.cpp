@@ -1,17 +1,18 @@
 #include "config.h"
 #include <ArduinoJson.h>        // json - to store configuration
 #include "FS.h"                 // filesystem - to store configuration
+#include "debug.h"
 
 bool loadSettings(char*ssid, char*password) {
   File configFile = SPIFFS.open("/config.json", "r");
   if (!configFile) {
-    Serial.println("Failed to open config file");
+    DEBUGLOG("Failed to open config file");
     return false;
   }
 
   size_t size = configFile.size();
   if (size > 1024) {
-    Serial.println("Config file size is too large");
+    DEBUGLOG("Config file size is too large");
     return false;
   }
 
@@ -27,7 +28,7 @@ bool loadSettings(char*ssid, char*password) {
   JsonObject& json = jsonBuffer.parseObject(buf.get());
 
   if (!json.success()) {
-    Serial.println("Failed to parse config file");
+    DEBUGLOG("Failed to parse config file");
     return false;
   }
 
@@ -38,10 +39,11 @@ bool loadSettings(char*ssid, char*password) {
   strcpy(ssid, myssid);
   strcpy(password, mypwd);
 
-  Serial.print("Loaded ssid: ");
-  Serial.println(ssid);
-  Serial.print("Loaded pwd: ");
-  Serial.println(password);
+  DEBUGLOG("Loaded ssid: ");
+  DEBUGLOG(ssid);
+  DEBUGLOG("Loaded pwd: ");
+  DEBUGLOG(password);
+  
   return (strlen(ssid) > 0);
 }
 
@@ -53,7 +55,7 @@ bool storeSettings() {
 
   File configFile = SPIFFS.open("/config.json", "w");
   if (!configFile) {
-    Serial.println("Failed to open config file for writing");
+    DEBUGLOG("Failed to open config file for writing");
     return false;
   }
 
