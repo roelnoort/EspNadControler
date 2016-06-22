@@ -1,9 +1,29 @@
 #include "nad.h"
 #include "debug.h"
 
+bool ClearSerialBuffer() {
+  bool dataRead = false;
+  
+  String s;
+  while (Serial.available() > 0) {
+    s = Serial.readString();
+    DEBUGLOG("I READ=" + s);
+    dataRead = true;  
+  }
+
+  return dataRead;
+}
+
 bool NadSend(String command) {
   bool success = false;
-  
+
+  // make sure there is no incoming serial data
+  // we will get a reply directly after our command
+  // and we don't want to threat data received before our
+  // command as the reply.
+  ClearSerialBuffer();
+
+  // Send the command
   Serial.print("\r");
   Serial.print(command);
   Serial.print("\r");  
@@ -17,12 +37,7 @@ bool NadSend(String command) {
   }
   
   // And read all data that the receiver sends back to us.
-  String s;
-  while (Serial.available() > 0) {
-    s = Serial.readString();
-    DEBUGLOG("I READ=" + s);
-    success = true;
-  }
+  success = ClearSerialBuffer();
 
   return success;
 }
