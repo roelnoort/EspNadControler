@@ -44,7 +44,7 @@ void setup(void){
   DEBUGLOG("IP address: ");
   DEBUGLOG(WiFi.localIP());
 
-  if (MDNS.begin("esp8266")) {
+  if (MDNS.begin("nadcontroler")) {
     DEBUGLOG("MDNS responder started");
   }
 
