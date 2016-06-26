@@ -47,11 +47,11 @@ bool loadSettings(char*ssid, char*password) {
   return (strlen(ssid) > 0);
 }
 
-bool storeSettings() {
+bool storeSettings(String ssid, String password) {
   StaticJsonBuffer<200> jsonBuffer;
   JsonObject& json = jsonBuffer.createObject();
-  json["ssid"] = "burton2G";
-  json["pwd"] = "customflyingv";
+  json["ssid"] = ssid;
+  json["pwd"] = password;
 
   File configFile = SPIFFS.open("/config.json", "w");
   if (!configFile) {

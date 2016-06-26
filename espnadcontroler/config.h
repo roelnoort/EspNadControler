@@ -1,4 +1,4 @@
 #include "Arduino.h"
 
 bool loadSettings(char*ssid, char*password);
-bool storeSettings();
+bool storeSettings(String ssid, String password);
