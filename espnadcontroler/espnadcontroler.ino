@@ -16,11 +16,22 @@ const int led = 13;
 
 void SetupServerOrAP() {
   if (loadSettings(ssid, password)) {
+    WiFi.mode(WIFI_STA);
+    WiFi.disconnect();
     WiFi.begin(ssid, password);
 
     // Wait for connection, with timeout on i
     int i = 0;
     while ((WiFi.status() != WL_CONNECTED) && (i < 50)) {
+      if (WiFi.status() == WL_CONNECTED) DEBUGLOG("connected");
+      if (WiFi.status() == WL_NO_SHIELD) DEBUGLOG("no shield");
+      if (WiFi.status() == WL_IDLE_STATUS) DEBUGLOG("IDLE");
+      if (WiFi.status() == WL_NO_SSID_AVAIL) DEBUGLOG("NO SSID AVAIL");
+      if (WiFi.status() == WL_SCAN_COMPLETED) DEBUGLOG("SCAN COMPLETE");
+      if (WiFi.status() == WL_CONNECT_FAILED) DEBUGLOG("CONNECT FAILED");
+      if (WiFi.status() == WL_CONNECTION_LOST) DEBUGLOG("CONNECTION LOST");
+      if (WiFi.status() == WL_DISCONNECTED) DEBUGLOG("DISCONNECTED");
+      
       delay(500);
       i++;
       DEBUGLOG(".");

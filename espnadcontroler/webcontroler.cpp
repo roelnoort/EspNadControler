@@ -125,6 +125,9 @@ void handleNotFound(){
 }
 
 void WebControlerSetup() {
+  //WiFi.mode(WIFI_STA);
+  //WiFi.disconnect();
+  
   server.on("/", handleRoot);
 
   server.on("/switchinput/1", handleSwitchInput);

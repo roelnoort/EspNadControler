@@ -13,6 +13,24 @@ void handleApRoot() {
   message += "<!DOCTYPE HTML>\n";
   message += "<html><head><title>Setup NAD Controler</title></head><body>\n";
   message += "<h1>Connect your Wifi</h1>"; 
+
+  int n = WiFi.scanNetworks();
+  if (n == 0) {
+    message += "no networks found <br>";
+  }
+  else {
+    message += String(n) + " networks found <br>";
+    for (int i = 0; i < n; ++i)
+    {
+      // Print SSID and RSSI for each network found
+      message += String(i) + " : ";
+      message += WiFi.SSID(i) + " (" + WiFi.RSSI(i) + ") ";
+      message += (WiFi.encryptionType(i) == ENC_TYPE_NONE)?" ":"*";
+      message += "<br>";
+      delay(10);
+    }
+  }
+  
   message += "<form action='storesettings' method='post'>";
   message += "Network name (ssid): <br>";
   message += "<input type='text' name='ssid'> <br>";
@@ -67,7 +85,9 @@ void AccessPointSetup() {
   // The access point ssid is 'nadcontroler'.
   // We can access the website via http://192.168.4.1 once we are connected to the AP's wifi
   // For some reason http://nadcontroler does not seem to work in AP mode.
-  WiFi.softAP("nadcontroler");
+  WiFi.mode(WIFI_AP);
+  WiFi.disconnect();
+  WiFi.softAP("nadcontroler", "test");
   ap.on("/", handleApRoot);
   ap.on("/storesettings", handleApStoreSettings);
   ap.begin();
