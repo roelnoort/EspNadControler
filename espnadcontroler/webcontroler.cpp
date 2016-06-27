@@ -4,6 +4,7 @@
 #include <ESP8266WebServer.h>   // http server
 #include "nad.h"
 #include "debug.h"
+#include "states.h"
 
 ESP8266WebServer server(80);
 

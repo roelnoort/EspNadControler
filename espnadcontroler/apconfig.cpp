@@ -4,6 +4,7 @@
 #include <ESP8266WebServer.h>
 #include "debug.h"
 #include "config.h"
+#include "states.h"
 
 ESP8266WebServer ap(80);
 
@@ -46,6 +47,7 @@ void handleApStoreSettings() {
 
   if (storeSettings(ssid, pwd)) {
     message += "SETTINGS STORED SUCCESFULLY <br>";
+    SetState(bootup);
   }
   else {
     message += "ERROR SAVING SETTINGS <br>";

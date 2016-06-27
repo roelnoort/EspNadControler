@@ -6,14 +6,13 @@
 #include "apconfig.h"
 #include "webcontroler.h"
 #include "debug.h"
+#include "states.h"
 
 char* ssid;
 char* password;
 
 const int led = 13;
 
-enum OperationModes {bootup, configuration, operational};
-OperationModes CurrentMode = bootup;
 
 void SetupServerOrAP() {
   if (loadSettings(ssid, password)) {
@@ -28,22 +27,25 @@ void SetupServerOrAP() {
     }
 
     if (WiFi.status() == WL_CONNECTED) {
-      CurrentMode = operational;
+      SetState(operational);
       DEBUGLOG("Connected to WiFi --> operational mode");
       DEBUGLOG("Connected to ");
       DEBUGLOG(WiFi.SSID());
       DEBUGLOG("IP address: ");
       DEBUGLOG(WiFi.localIP());
       WebControlerSetup();
+      if (MDNS.begin("nadcontroler")) {
+        DEBUGLOG("MDNS responder started");
+      }
     }
     else {
-      CurrentMode = configuration;
+      SetState(configuration);
       DEBUGLOG("*NOT* Connected to WiFi --> configuration mode");
-      AccessPointSetup;
+      AccessPointSetup();
     }
   }
   else {
-    CurrentMode = configuration;
+    SetState(configuration);
     DEBUGLOG("settings cannot be loaded --> configuration mode");
     AccessPointSetup();
   }
@@ -60,17 +62,13 @@ void setup(void){
   } else {
     DEBUGLOG("File system started");
   }
- 
-  if (MDNS.begin("nadcontroler")) {
-    DEBUGLOG("MDNS responder started");
-  }
 
   UdpSetup();
 }
 
 void loop(void){
 
-  switch (CurrentMode) {
+  switch (GetState()) {
   case bootup:
     SetupServerOrAP();
   break;
