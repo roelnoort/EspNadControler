@@ -18,7 +18,8 @@ void SetupServerOrAP() {
   if (loadSettings(ssid, password)) {
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
-    WiFi.begin(ssid, password);
+    //WiFi.begin(ssid, password);
+    WiFi.begin("burton", "customflyingv");
 
     // Wait for connection, with timeout on i
     int i = 0;

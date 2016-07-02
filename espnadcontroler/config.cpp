@@ -13,6 +13,7 @@ bool loadSettings(char*ssid, char*password) {
   size_t size = configFile.size();
   if (size > 1024) {
     DEBUGLOG("Config file size is too large");
+    configFile.close();
     return false;
   }
 
@@ -23,7 +24,8 @@ bool loadSettings(char*ssid, char*password) {
   // buffer to be mutable. If you don't use ArduinoJson, you may as well
   // use configFile.readString instead.
   configFile.readBytes(buf.get(), size);
-
+  configFile.close();
+  
   StaticJsonBuffer<200> jsonBuffer;
   JsonObject& json = jsonBuffer.parseObject(buf.get());
 
@@ -41,6 +43,7 @@ bool loadSettings(char*ssid, char*password) {
 
   DEBUGLOG("Loaded ssid: ");
   DEBUGLOG(ssid);
+  DEBUGLOG(strlen(ssid));
   DEBUGLOG("Loaded pwd: ");
   DEBUGLOG(password);
   
@@ -60,5 +63,6 @@ bool storeSettings(String ssid, String password) {
   }
 
   json.printTo(configFile);
+  configFile.close();
   return true;
 }

@@ -32,20 +32,92 @@ void handleRoot() {
 
   String message = "";
 
-  message += "<!DOCTYPE HTML>\n";
-  message += "<html><head>";
-  message += htmlStyleTag;
-  message += "<title>NAD Controler Info</title>";
-  message += "</head><body>\n";
-  message += "<h1>NAD T758 controler</h1>\n";
-  message += "<p>This is the RS232 controler for the NAD T758.</p>\n";
-  message += "<p><a href='switchinput/6' class='button'>SONOS</a></p>\n";
-  message += "<p><a href='switchinput/2' class='button'>AppleTV</a></p>\n";
-  message += "<p><a href='switchinput/1' class='button'>Mediacenter</a></p>\n";
-  message += "<p>Use HTTP POST via </p>\n";
-  message += "<p>http://&lt;hostname&gt;:&lt;port&gt;/switchinput/&lt;source number&gt;</p>\n";
-  message += "<p>http://&lt;hostname&gt;:&lt;port&gt;/poweroff</p>\n";
-  message += "</body></html>\n";
+message += "<!DOCTYPE HTML>\n";
+message += "<html><head>";
+message += "<title>NAD Controler Info</title>";
+message += "<meta charset='utf-8'>";
+message += "<meta name='viewport' content='width=device-width, initial-scale=1'>";
+message += "<link rel='stylesheet' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>";
+
+message += "<style>";
+message += "[class*=col-] {margin-top:20px;}";
+message += "</style>";
+message += "<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script>";
+message += "<script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>";
+message += "</head><body>\n";
+
+message += "<div class='container'>\n";
+
+message += "<div class='row'>\n";
+
+message += "<div class='col-xs-6'>\n";
+message += "<button type='button' id='sonos' class='btn btn-default btn-block btn-lg'>SONOS</button>\n";
+message += "</div>\n";
+
+message += "<div class='col-xs-6'>\n";
+message += "<button type='button' id='appletv' class='btn btn-default btn-block btn-lg'>AppleTV</button>\n";
+message += "</div>\n";
+
+message += "<div class='col-xs-6'>\n";
+message += "<button type='button' id='xbox' class='btn btn-default btn-block btn-lg'>XBox</button>\n";
+message += "</div>\n";
+
+message += "<div class='col-xs-6'>\n";
+message += "<button type='button' id='chromecast' class='btn btn-default btn-block btn-lg'>Chromecast</button>\n";
+message += "</div>\n";
+
+message += "<div class='col-xs-6'>\n";
+message += "<button type='button' id='dvd' class='btn btn-default btn-block btn-lg'>DVD</button>\n";
+message += "</div>\n";
+
+message += "<div class='col-xs-6'>\n";
+message += "<button type='button' id='mediacenter' class='btn btn-default btn-block btn-lg'>Mediacenter</button>\n";
+message += "</div>\n";
+
+message += "</div>\n"; // row
+
+message += "<div class='row'>\n";
+
+message += "<div class='col-xs-6 col-xs-offset-3'>\n";
+message += "<button href='poweroff' type='button' id='off' class='btn btn-default btn-block btn-lg'>Off</button>\n";
+message += "</div>\n";
+
+message += "</div>\n"; // row
+
+message += "</div>\n";
+
+message += "<script>";
+message += "$('#sonos').click(function() {";
+message += "$.post('/switchinput/6');";
+message += "});";
+
+message += "$('#appletv').click(function() {";
+message += "$.post('/switchinput/2');";
+message += "});";
+
+message += "$('#xbox').click(function() {";
+message += "$.post('/switchinput/4');";
+message += "});";
+
+message += "$('#chromecast').click(function() {";
+message += "$.post('/switchinput/3');";
+message += "});";
+
+message += "$('#dvd').click(function() {";
+message += "$.post('/switchinput/7');";
+message += "});";
+
+message += "$('#mediacenter').click(function() {";
+message += "$.post('/switchinput/1');";
+message += "});";
+
+message += "$('#off').click(function() {";
+message += "$.post('/poweroff');";
+message += "});";
+
+message += "</script>";
+
+message += "</body></html>\n";
   
   server.send(200, "text/html", message);
   digitalWrite(led, 0);
