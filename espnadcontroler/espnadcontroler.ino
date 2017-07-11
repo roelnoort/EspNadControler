@@ -19,6 +19,7 @@ void SetupServerOrAP() {
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
     //WiFi.begin(ssid, password);
+    //WiFi.begin("burton2G", "customflyingv");
     WiFi.begin("burton", "customflyingv");
 
     // Wait for connection, with timeout on i
